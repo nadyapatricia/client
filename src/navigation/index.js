@@ -3,15 +3,15 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Login from './src/screens/Login';
-import SignUp from './src/screens/SignUp';
-import Dashboard from './src/screens/Dashboard';
+import Login from '../screens/Login';
+import SignUp from '../screens/SignUp';
+import Dashboard from '../screens/Dashboard';
 
-import { color } from './src/utility';
+import { color } from '../utility';
 
 const Stack = createStackNavigator();
 
-function App() {
+function NavContainer() {
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -40,11 +40,11 @@ function App() {
         <Stack.Screen
           name='Dashboard'
           component={Dashboard}
-          options={{ headerLeft: null }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-export default App;
+export default NavContainer;
