@@ -63,12 +63,14 @@ export default function App() {
             setUser(JSON.parse(user))
         }
     }
+
     async function handlePress() {
         const _id = Math.random().toString(36).substring(7)
         const user = { _id, name }
         await AsyncStorage.setItem('user', JSON.stringify(user))
         setUser(user)
     }
+    
     async function handleSend(messages) {
         const writes = messages.map((m) => chatsRef.add(m))
         await Promise.all(writes)
