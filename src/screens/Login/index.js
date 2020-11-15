@@ -7,6 +7,8 @@ import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
 import loginRequest from '../../network/login';
 
 const Login = ({ navigation }) => {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
   const globalState = useContext(Store);
   const { dispatchLoaderAction } = globalState;
   const [credentials, setCredentials] = useState({
@@ -51,7 +53,10 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}>
-      <Text>Login</Text>
+      <Text style={{ fontFamily: 'comfortaa-bold' }}>Login</Text>
+      <Text style={{ fontFamily: 'comfortaa-regular' }}>
+        Please login first
+      </Text>
       <View style={[globalStyle.containerCentered]}>
         <Logo />
       </View>
