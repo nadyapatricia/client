@@ -16,8 +16,9 @@ const Stack = createStackNavigator();
 
 const getFonts = () =>
   Font.loadAsync({
-    'comfortaa-regular': require('./assets/fonts/Comfortaa-Regular.ttf'),
     'comfortaa-bold': require('./assets/fonts/Comfortaa-Bold.ttf'),
+    'comfortaa-regular': require('./assets/fonts/Comfortaa-Regular.ttf'),
+    'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
   });
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
             initialRouteName='Login'
             screenOptions={{
               headerShown: true,
-              headerStyle: { backgroundColor: color.DARK_GRAY },
+              headerStyle: { backgroundColor: '#00dfeb' },
               headerTintColor: color.WHITE,
               headerTitleAlign: 'center',
               headerTitleStyle: {

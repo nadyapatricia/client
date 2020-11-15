@@ -1,10 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { Text, View } from 'react-native';
-import { globalStyle, color } from '../../utility';
+import { Text, View, Image, Dimensions } from 'react-native';
+import { globalStyle, color, appStyle } from '../../utility';
 import { InputField, Logo, CustomButton } from '../../components';
 import { Store } from '../../context/store';
 import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
-import loginRequest from '../../network/login';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const windowHeight = Dimensions.get('window').height;
 
 const Login = ({ navigation }) => {
   const globalState = useContext(Store);
@@ -25,20 +27,12 @@ const Login = ({ navigation }) => {
       dispatchLoaderAction({
         type: LOADING_START,
       });
-      loginRequest(email, password)
-        .then((res) => {
-          alert(res.data);
-          dispatchLoaderAction({
-            type: LOADING_STOP,
-          });
-          navigation.replace('Dashboard');
-        })
-        .catch((err) => {
-          dispatchLoaderAction({
-            type: LOADING_STOP,
-          });
-          alert(err);
+      setTimeout(() => {
+        dispatchLoaderAction({
+          type: LOADING_STOP,
         });
+        navigation.navigate('Dashboard');
+      }, 1500);
     }
   };
 
@@ -50,14 +44,29 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={[globalStyle.flex1, { backgroundColor: color.WHITE }]}>
-      <View style={[globalStyle.containerCentered]}>
+    <View style={[globalStyle.flex1]}>
+      <LinearGradient
+        colors={['#C9D6FF', '#E2E2E2']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 35,
+          height: windowHeight,
+        }}
+      />
+      <View style={[globalStyle.containerCentered, { marginTop: 150 }]}>
+        <Image
+          style={{ width: 150, height: 150 }}
+          source={require('../../../assets/img/docLogo.png')}
+        />
         <Text
           style={{
             fontFamily: 'comfortaa-regular',
-            fontSize: 50,
+            fontSize: 20,
             textAlign: 'center',
-            marginTop: 50,
           }}
         >
           Advisory Board
@@ -75,7 +84,16 @@ const Login = ({ navigation }) => {
           secureTextEntry={true}
           onChangeText={(text) => handleOnChange('password', text)}
         />
-        <CustomButton title='Login' onPress={() => onLoginPress()} />
+        <CustomButton
+          title='Login'
+          onPress={() => onLoginPress()}
+          style={[
+            globalStyle.m_t_5,
+            {
+              fontFamily: 'roboto-regular',
+            },
+          ]}
+        />
       </View>
     </View>
   );
