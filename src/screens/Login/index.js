@@ -7,6 +7,7 @@ import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const Login = ({ navigation }) => {
   const globalState = useContext(Store);

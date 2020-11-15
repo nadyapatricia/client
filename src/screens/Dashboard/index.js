@@ -1,8 +1,20 @@
 import React, { useLayoutEffect, Fragment } from 'react';
-import { Text, StyleSheet, View, Alert } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  Alert,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import { globalStyle, color, appStyle } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Search from 'react-native-search-box';
+import CardUser from '../../components/cardUser';
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const Dashboard = ({ navigation }) => {
   useLayoutEffect(() => {
@@ -54,10 +66,35 @@ const Dashboard = ({ navigation }) => {
         >
           Search
         </Text>
-        <Search backgroundColor='rgb(46, 46, 46)' onSearch={onSearch} />
+        <Search backgroundColor='rgb(46, 46, 46)' />
+        <View>
+          <ScrollView>
+            <CardUser
+              image_url='https://minotar.net/armor/bust/user/100.png'
+              name='Prof. James Smith'
+              str_number='3.102.45.6723.892'
+              availability='Mon-Fri 9am-3pm'
+            />
+          </ScrollView>
+        </View>
       </View>
     </Fragment>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 50,
+  },
+  tinyLogo: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+  },
+  logo: {
+    width: 66,
+    height: 58,
+  },
+});
 
 export default Dashboard;
