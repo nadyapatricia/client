@@ -21,6 +21,25 @@ const windowWidth = Dimensions.get('window').width;
 let dummyData;
 
 const Dashboard = ({ navigation }) => {
+  const [users, setUser] = useState([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      axios({
+        method: 'get',
+        url: 'http://192.168.1.5:3000/users',
+      })
+        .then(({ data }) => {
+          console.log(data);
+          setUser(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    console.log(users, '<<<<<<<<<<< users');
+    fetchUsers();
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -93,6 +112,19 @@ const Dashboard = ({ navigation }) => {
               />
             )}
           ></FlatList>
+          {users.map((user) => {
+            return (
+              <ScrollView>
+                <CardUser
+                  image_url='https://minotar.net/armor/bust/user/100.png'
+                  name={user.name}
+                  str_number={user.str_number}
+                  availability='Mon-Fri 9am-3pm'
+                  onPress={handlePickAdvisor()}
+                />
+              </ScrollView>
+            );
+          })}
         </View>
       </View>
     </Fragment>
