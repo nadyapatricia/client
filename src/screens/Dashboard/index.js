@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, Fragment } from 'react';
+import React, { useLayoutEffect, Fragment, useEffect } from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,14 +7,18 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import { globalStyle, color, appStyle } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import CardUser from '../../components/cardUser';
 import SearchBar from '../../components/searchBar';
+import axios from 'axios';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
+
+let dummyData;
 
 const Dashboard = ({ navigation }) => {
   useLayoutEffect(() => {
@@ -46,6 +50,23 @@ const Dashboard = ({ navigation }) => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    axios({
+      method: 'GET',
+      url: `http://192.168.1.5:3000/users`,
+    })
+      .then(({ data }) => {
+        dummyData = data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  });
+
+  const handlePress = (UserId) => {
+    console.log(UserId);
+  };
+
   return (
     <Fragment>
       <View style={([globalStyle.flex1], { margin: 20 })}>
@@ -59,26 +80,20 @@ const Dashboard = ({ navigation }) => {
           Search
         </Text>
         <SearchBar />
-        <ScrollView>
-          <CardUser
-            image_url='https://minotar.net/armor/bust/user/100.png'
-            name='Prof. James Smith'
-            str_number='3.102.45.6723.892'
-            address='RS Mitra Keluarga'
-          />
-          <CardUser
-            image_url='https://minotar.net/armor/bust/user/100.png'
-            name='Prof. James Smith'
-            str_number='3.102.45.6723.892'
-            address='RS Mitra Keluarga'
-          />
-          <CardUser
-            image_url='https://minotar.net/armor/bust/user/100.png'
-            name='Prof. James Smith'
-            str_number='3.102.45.6723.892'
-            address='RS Mitra Keluarga'
-          />
-        </ScrollView>
+        <View>
+          <FlatList
+            data={dummyData}
+            renderItem={({ item }) => (
+              <CardUser
+                image_url={item.avatar_url}
+                name={item.name}
+                str_number={item.str_number}
+                address={item.work_address}
+                onPress={() => handlePress(item.id)}
+              />
+            )}
+          ></FlatList>
+        </View>
       </View>
     </Fragment>
   );
