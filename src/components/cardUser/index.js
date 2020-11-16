@@ -8,11 +8,12 @@ export default function CardUser({
   str_number,
   image_url,
   address,
-  onPress,
+  handlePickAdvisor,
 }) {
+
   return (
     <>
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={handlePickAdvisor}>
         <View style={{ flexDirection: 'row' }}>
           <View style={styles.cardImage}>
             <Image
