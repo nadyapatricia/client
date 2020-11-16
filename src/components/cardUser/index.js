@@ -7,7 +7,7 @@ export default function CardUser({
   name,
   str_number,
   image_url,
-  availability,
+  address,
   onPress,
 }) {
   return (
@@ -16,14 +16,14 @@ export default function CardUser({
         <View style={{ flexDirection: 'row' }}>
           <View style={styles.cardImage}>
             <Image
-              style={{ width: '80%', height: '80%', borderRadius: 50 }}
+              style={{ width: 50, height: 50, borderRadius: 50 }}
               source={{ uri: image_url }}
             />
           </View>
           <View style={{ flex: 0.7, overflow: 'hidden', left: -10 }}>
             <Text style={styles.cardTitle}>{name}</Text>
             <Text style={styles.cardNumber}>{str_number}</Text>
-            <Text style={styles.cardAvailability}>{availability}</Text>
+            <Text style={styles.cardAddress}>{address}</Text>
           </View>
         </View>
       </TouchableOpacity>

@@ -5,7 +5,7 @@ const windowWidth = Dimensions.get('window').width;
 
 export const styles = StyleSheet.create({
   card: {
-    marginVertical: 20,
+    marginVertical: 5,
     backgroundColor: '#fff',
     paddingVertical: 8,
     paddingHorizontal: 15,
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     color: '#777',
     marginLeft: 10,
   },
-  cardAvailability: {
+  cardAddress: {
     fontSize: 13,
     marginVertical: 8,
     marginLeft: 10,

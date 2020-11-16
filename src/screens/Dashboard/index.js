@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { globalStyle, color, appStyle } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import Search from 'react-native-search-box';
 import CardUser from '../../components/cardUser';
+import SearchBar from '../../components/searchBar';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -46,14 +46,6 @@ const Dashboard = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const onSearch = (searchText) => {
-    return new Promise((resolve, reject) => {
-      console.log(searchText);
-      console.log('Add your search function here.');
-      resolve();
-    });
-  };
-
   return (
     <Fragment>
       <View style={([globalStyle.flex1], { margin: 20 })}>
@@ -66,17 +58,27 @@ const Dashboard = ({ navigation }) => {
         >
           Search
         </Text>
-        <Search backgroundColor='rgb(46, 46, 46)' />
-        <View>
-          <ScrollView>
-            <CardUser
-              image_url='https://minotar.net/armor/bust/user/100.png'
-              name='Prof. James Smith'
-              str_number='3.102.45.6723.892'
-              availability='Mon-Fri 9am-3pm'
-            />
-          </ScrollView>
-        </View>
+        <SearchBar />
+        <ScrollView>
+          <CardUser
+            image_url='https://minotar.net/armor/bust/user/100.png'
+            name='Prof. James Smith'
+            str_number='3.102.45.6723.892'
+            address='RS Mitra Keluarga'
+          />
+          <CardUser
+            image_url='https://minotar.net/armor/bust/user/100.png'
+            name='Prof. James Smith'
+            str_number='3.102.45.6723.892'
+            address='RS Mitra Keluarga'
+          />
+          <CardUser
+            image_url='https://minotar.net/armor/bust/user/100.png'
+            name='Prof. James Smith'
+            str_number='3.102.45.6723.892'
+            address='RS Mitra Keluarga'
+          />
+        </ScrollView>
       </View>
     </Fragment>
   );
