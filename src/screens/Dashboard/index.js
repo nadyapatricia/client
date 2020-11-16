@@ -1,19 +1,16 @@
 import React, { useLayoutEffect, Fragment, useEffect, useState } from 'react';
 import {
   Text,
-  StyleSheet,
   View,
   Alert,
   ActivityIndicator,
   TextInput,
   FlatList,
 } from 'react-native';
-import { globalStyle, color, appStyle } from '../../utility';
+import { globalStyle, color } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import CardUser from '../../components/cardUser';
-import SearchBar from '../../components/searchBar';
 import filter from 'lodash.filter';
-import axios from 'axios';
 
 let dummyData = [
   {
@@ -25,6 +22,7 @@ let dummyData = [
     str_number: '33.1.1.401.3.18.103711',
     work_address: 'RS Mitra Keluarga',
     password: '123',
+    specialty: 'internists',
     role: 'adviseryBoard',
     createdAt: '2020-11-16T06:03:21.692Z',
     updatedAt: '2020-11-16T06:03:21.692Z',
@@ -39,6 +37,7 @@ let dummyData = [
     work_address: 'RS Mitra Keluarga',
     password: 'didadadida',
     role: 'doctor',
+    specialty: 'cardiologists',
     createdAt: '2020-11-16T06:03:21.692Z',
     updatedAt: '2020-11-16T06:03:21.692Z',
   },
@@ -52,6 +51,7 @@ let dummyData = [
     work_address: 'RS Mitra Keluarga',
     password: '123',
     role: 'adviseryBoard',
+    specialty: 'gastroenterologists',
     createdAt: '2020-11-16T06:03:21.692Z',
     updatedAt: '2020-11-16T06:03:21.692Z',
   },
@@ -65,6 +65,21 @@ let dummyData = [
     work_address: 'RS Mitra Keluarga',
     password: '123',
     role: 'adviseryBoard',
+    specialty: 'ophthalmologists',
+    createdAt: '2020-11-16T06:03:21.692Z',
+    updatedAt: '2020-11-16T06:03:21.692Z',
+  },
+  {
+    id: 21,
+    name: 'Xavier',
+    username: 'xavier',
+    email: 'yoi@mail.com',
+    avatar_url: 'https://minotar.net/cube/user/100.png',
+    str_number: '33.1.1.405.3.18.103800',
+    work_address: 'RS Mitra Keluarga',
+    password: '123',
+    role: 'adviseryBoard',
+    specialty: 'yang penting ada x nya',
     createdAt: '2020-11-16T06:03:21.692Z',
     updatedAt: '2020-11-16T06:03:21.692Z',
   },
@@ -76,6 +91,10 @@ const Dashboard = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [fullData, setFullData] = useState([]);
+
+  useEffect(() => {
+    setData(dummyData);
+  });
 
   // useEffect(() => {
   //   setIsLoading(true);
@@ -118,6 +137,15 @@ const Dashboard = ({ navigation }) => {
           }
         />
       ),
+      headerLeft: () => (
+        <SimpleLineIcons
+          name='grid'
+          size={26}
+          color={color.WHITE}
+          style={{ left: 10 }}
+          onPress={() => navigation.navigate('Feed')}
+        />
+      ),
     });
   }, [navigation]);
 
@@ -137,8 +165,11 @@ const Dashboard = ({ navigation }) => {
           clearButtonMode='always'
           value={query}
           onChangeText={(queryText) => handleSearch(queryText)}
-          placeholder='Search'
-          style={{ backgroundColor: '#fff', paddingHorizontal: 20 }}
+          placeholder='Search for name or specialty'
+          style={{
+            backgroundColor: '#fff',
+            paddingHorizontal: 20,
+          }}
         />
       </View>
     );
@@ -189,9 +220,8 @@ const Dashboard = ({ navigation }) => {
               marginBottom: 20,
             }}
           >
-            Search
+            Consultation
           </Text>
-          <SearchBar />
           <View>
             <FlatList
               data={data}
@@ -202,6 +232,7 @@ const Dashboard = ({ navigation }) => {
                   name={item.name}
                   str_number={item.str_number}
                   address={item.work_address}
+                  specialty={item.specialty}
                   onPress={() => handlePress(item.id)}
                 />
               )}

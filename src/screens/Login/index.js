@@ -65,12 +65,12 @@ const Login = ({ navigation }) => {
         />
         <Text
           style={{
-            fontFamily: 'comfortaa-regular',
+            fontFamily: 'comfortaa-bold',
             fontSize: 20,
             textAlign: 'center',
           }}
         >
-          Advisory Board
+          MedRx
         </Text>
       </View>
       <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>

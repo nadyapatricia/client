@@ -10,8 +10,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     width: windowWidth / 1.2,
-    marginHorizontal: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 2,
