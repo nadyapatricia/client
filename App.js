@@ -41,20 +41,17 @@ function App() {
               },
             }}
           >
-            {/* <Stack.Screen
+            <Stack.Screen
               name='Login'
               component={Login}
-              options={{ headerShown: false }}
-            /> */}
+            />
             <Stack.Screen
               name='Dashboard'
               component={Dashboard}
-              options={{ headerLeft: null }}
             />
             <Stack.Screen
               name='Chat'
               component={Chat}
-              options={{ headerLeft: null }}
             />
           </Stack.Navigator>
         </NavigationContainer>

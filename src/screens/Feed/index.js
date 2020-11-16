@@ -1,3 +1,10 @@
+
+// const Feed = () => {
+
+// }
+
+export default Feed
+
 import React, { useLayoutEffect, Fragment, useEffect, useState } from 'react';
 import {
   SafeAreaView,
@@ -22,6 +29,44 @@ const windowWidth = Dimensions.get('window').width;
 
 const Dashboard = ({ navigation }) => {
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+          headerRight: () => (
+            <SimpleLineIcons
+              name='logout'
+              size={26}
+              color={color.WHITE}
+              style={{ right: 10 }}
+              onPress={() =>
+                Alert.alert(
+                  'Logout',
+                  'Are you sure to log out?',
+                  [
+                    {
+                      text: 'Yes',
+                      onPress: () => logout(),
+                    },
+                    {
+                      text: 'No',
+                    },
+                  ],
+                  { cancelable: false }
+                )
+              }
+            />
+          ),
+          headerLeft: () => (
+            <SimpleLineIcons
+              name='grid'
+              size={26}
+              color={color.WHITE}
+              style={{ left: 10 }}
+              onPress={() => navigation.navigate('Feed')}
+            />
+          ),
+        });
+      }, [navigation]);
+
   const [users, setUser] = useState([])
     useEffect (() => {
       const fetchUsers = async () => {
@@ -41,35 +86,6 @@ const Dashboard = ({ navigation }) => {
       console.log(users, "<<<<<<<<<<< users");
       fetchUsers()
     }, [])
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <SimpleLineIcons
-          name='logout'
-          size={26}
-          color={color.WHITE}
-          style={{ right: 10 }}
-          onPress={() =>
-            Alert.alert(
-              'Logout',
-              'Are you sure to log out?',
-              [
-                {
-                  text: 'Yes',
-                  onPress: () => logout(),
-                },
-                {
-                  text: 'No',
-                },
-              ],
-              { cancelable: false }
-            )
-          }
-        />
-      ),
-    });
-  }, [navigation]);
 
   const handlePress = (UserId) => {
     console.log("<<<<<<<< handlePRESS");

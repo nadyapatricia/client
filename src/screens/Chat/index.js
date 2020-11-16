@@ -27,7 +27,7 @@ if (firebase.apps.length === 0) { //
 YellowBox.ignoreWarnings(['Setting a timer for a long period of time'])
 
 const db = firebase.firestore()
-const chatsRef = db.collection('chats')
+const chatsRef = db.collection('testing')
 
 const Chat = () => {
     const [user, setUser] = useState(null)

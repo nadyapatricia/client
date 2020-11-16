@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+// import { TouchableOpacity } from 'react-native-gesture-handler';
 import { styles } from './style';
 
 export default function CardUser({
@@ -8,12 +8,12 @@ export default function CardUser({
   str_number,
   image_url,
   address,
-  handlePickAdvisor,
+  handlePress,
 }) {
 
   return (
     <>
-      <TouchableOpacity style={styles.card} onPress={handlePickAdvisor}>
+      {/* <TouchableOpacity style={styles.card} onPress={handlePress}> */}
         <View style={{ flexDirection: 'row' }}>
           <View style={styles.cardImage}>
             <Image
@@ -27,7 +27,7 @@ export default function CardUser({
             <Text style={styles.cardAddress}>{address}</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      {/* </TouchableOpacity> */}
     </>
   );
 }

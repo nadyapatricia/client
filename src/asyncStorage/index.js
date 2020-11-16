@@ -26,7 +26,7 @@ const getAsyncStorage = async (key) => {
   }
 };
 
-const clearAsyncStorage = () => {
+const clearAsyncStorage = async () => {
   try {
     await AsyncStorage.clear()
   } catch (error) {

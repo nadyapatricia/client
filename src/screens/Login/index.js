@@ -5,6 +5,9 @@ import { InputField, Logo, CustomButton } from '../../components';
 import { Store } from '../../context/store';
 import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
 import { LinearGradient } from 'expo-linear-gradient';
+// import {loginRequest} from '../../network'
+import axios from 'axios';
+const baseURL = 'http://192.168.1.5:3000/login';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -17,6 +20,17 @@ const Login = ({ navigation }) => {
     password: '',
   });
 
+  const loginRequest = (email, password) => {
+    return axios({
+      method: 'POST',
+      url: baseURL,
+      data: {
+        email,
+        password,
+      },
+    });
+  };
+
   const { email, password } = credentials;
 
   const onLoginPress = () => {
@@ -25,15 +39,23 @@ const Login = ({ navigation }) => {
     } else if (!password) {
       alert('Password is required');
     } else {
-      dispatchLoaderAction({
-        type: LOADING_START,
-      });
-      setTimeout(() => {
-        dispatchLoaderAction({
-          type: LOADING_STOP,
-        });
+      // dispatchLoaderAction({
+      //   type: LOADING_START,
+      // });
+      loginRequest (email,password)
+      .then((res) => {
+        console.log(res, "<<<<<<<<<<<<<<<< access token login ");
+        alert(res)
+        // dispatchLoaderAction({
+        //   type: LOADING_STOP,
+        // });
         navigation.navigate('Dashboard');
-      }, 1500);
+      })
+      .catch(err => {
+        alert(err)
+      })
+      // setTimeout(() => {
+      // }, 1500);
     }
   };
 
