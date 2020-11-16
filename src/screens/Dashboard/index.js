@@ -1,44 +1,96 @@
-import React, { useLayoutEffect, Fragment, useEffect } from 'react';
+import React, { useLayoutEffect, Fragment, useEffect, useState } from 'react';
 import {
   Text,
   StyleSheet,
   View,
   Alert,
-  Image,
-  ScrollView,
-  Dimensions,
+  ActivityIndicator,
+  TextInput,
   FlatList,
 } from 'react-native';
 import { globalStyle, color, appStyle } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import CardUser from '../../components/cardUser';
 import SearchBar from '../../components/searchBar';
+import filter from 'lodash.filter';
 import axios from 'axios';
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
-
-let dummyData;
+let dummyData = [
+  {
+    id: 17,
+    name: 'David Smith',
+    username: 'David32prof',
+    email: 'David@mail.com',
+    avatar_url: 'https://minotar.net/helm/user/100.png',
+    str_number: '33.1.1.401.3.18.103711',
+    work_address: 'RS Mitra Keluarga',
+    password: '123',
+    role: 'adviseryBoard',
+    createdAt: '2020-11-16T06:03:21.692Z',
+    updatedAt: '2020-11-16T06:03:21.692Z',
+  },
+  {
+    id: 18,
+    name: 'arief rachman',
+    username: 'arief',
+    email: 'arief@mail.com',
+    avatar_url: 'https://minotar.net/avatar/user.png',
+    str_number: '33.1.1.401.3.18.103800',
+    work_address: 'RS Mitra Keluarga',
+    password: 'didadadida',
+    role: 'doctor',
+    createdAt: '2020-11-16T06:03:21.692Z',
+    updatedAt: '2020-11-16T06:03:21.692Z',
+  },
+  {
+    id: 19,
+    name: 'adrian',
+    username: 'adss',
+    email: 'adrian@mail.com',
+    avatar_url: 'https://minotar.net/bust/user/100.png',
+    str_number: '33.1.1.405.3.18.103800',
+    work_address: 'RS Mitra Keluarga',
+    password: '123',
+    role: 'adviseryBoard',
+    createdAt: '2020-11-16T06:03:21.692Z',
+    updatedAt: '2020-11-16T06:03:21.692Z',
+  },
+  {
+    id: 20,
+    name: 'Bos Dira',
+    username: 'dirabbieto',
+    email: 'yoi@mail.com',
+    avatar_url: 'https://minotar.net/cube/user/100.png',
+    str_number: '33.1.1.405.3.18.103800',
+    work_address: 'RS Mitra Keluarga',
+    password: '123',
+    role: 'adviseryBoard',
+    createdAt: '2020-11-16T06:03:21.692Z',
+    updatedAt: '2020-11-16T06:03:21.692Z',
+  },
+];
 
 const Dashboard = ({ navigation }) => {
-  const [users, setUser] = useState([]);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      axios({
-        method: 'get',
-        url: 'http://192.168.1.5:3000/users',
-      })
-        .then(({ data }) => {
-          console.log(data);
-          setUser(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    console.log(users, '<<<<<<<<<<< users');
-    fetchUsers();
-  }, []);
+  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [fullData, setFullData] = useState([]);
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   axios
+  //     .get('http://localhost:3000/users')
+  //     .then(({ data }) => {
+  //       setData(data);
+  //       setFullData(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setIsLoading(false);
+  //       setError(err);
+  //     });
+  // }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -69,81 +121,97 @@ const Dashboard = ({ navigation }) => {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    axios({
-      method: 'GET',
-      url: `http://192.168.1.5:3000/users`,
-    })
-      .then(({ data }) => {
-        dummyData = data;
-      })
-      .catch((err) => {
-        throw err;
-      });
-  });
+  function renderHeader() {
+    return (
+      <View
+        style={{
+          backgroundColor: '#fff',
+          padding: 10,
+          marginVertical: 10,
+          borderRadius: 20,
+        }}
+      >
+        <TextInput
+          autoCapitalize='none'
+          autoCorrect={false}
+          clearButtonMode='always'
+          value={query}
+          onChangeText={(queryText) => handleSearch(queryText)}
+          placeholder='Search'
+          style={{ backgroundColor: '#fff', paddingHorizontal: 20 }}
+        />
+      </View>
+    );
+  }
 
   const handlePress = (UserId) => {
     console.log(UserId);
   };
 
-  return (
-    <Fragment>
-      <View style={([globalStyle.flex1], { margin: 20 })}>
-        <Text
-          style={{
-            fontFamily: 'comfortaa-bold',
-            fontSize: 25,
-            marginBottom: 20,
-          }}
-        >
-          Search
-        </Text>
-        <SearchBar />
-        <View>
-          <FlatList
-            data={dummyData}
-            renderItem={({ item }) => (
-              <CardUser
-                image_url={item.avatar_url}
-                name={item.name}
-                str_number={item.str_number}
-                address={item.work_address}
-                onPress={() => handlePress(item.id)}
-              />
-            )}
-          ></FlatList>
-          {users.map((user) => {
-            return (
-              <ScrollView>
-                <CardUser
-                  image_url='https://minotar.net/armor/bust/user/100.png'
-                  name={user.name}
-                  str_number={user.str_number}
-                  availability='Mon-Fri 9am-3pm'
-                  onPress={handlePickAdvisor()}
-                />
-              </ScrollView>
-            );
-          })}
-        </View>
-      </View>
-    </Fragment>
-  );
-};
+  const handleSearch = (text) => {
+    const formattedQuery = text.toLowerCase();
+    const filteredData = filter(dummyData, (user) => {
+      return contains(user, formattedQuery);
+    });
+    setData(filteredData);
+    setQuery(text);
+  };
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-  },
-  tinyLogo: {
-    width: 60,
-    height: 60,
-    borderRadius: 50,
-  },
-  logo: {
-    width: 66,
-    height: 58,
-  },
-});
+  const contains = ({ name }, query) => {
+    if (name.includes(query)) {
+      return true;
+    }
+    return false;
+  };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size='large' color='#5500dc' />
+      </View>
+    );
+  } else if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 18 }}>
+          Error fetching data... Check your network connection!
+        </Text>
+      </View>
+    );
+  } else {
+    return (
+      <Fragment>
+        <View style={([globalStyle.flex1], { margin: 20 })}>
+          <Text
+            style={{
+              fontFamily: 'comfortaa-bold',
+              fontSize: 25,
+              marginBottom: 20,
+            }}
+          >
+            Search
+          </Text>
+          <SearchBar />
+          <View>
+            <FlatList
+              data={data}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <CardUser
+                  image_url={item.avatar_url}
+                  name={item.name}
+                  str_number={item.str_number}
+                  address={item.work_address}
+                  onPress={() => handlePress(item.id)}
+                />
+              )}
+              ListHeaderComponent={renderHeader}
+            ></FlatList>
+          </View>
+        </View>
+      </Fragment>
+    );
+  }
+};
 
 export default Dashboard;
