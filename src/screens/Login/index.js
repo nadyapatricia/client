@@ -7,7 +7,8 @@ import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
 import { LinearGradient } from 'expo-linear-gradient';
 // import {loginRequest} from '../../network'
 import axios from 'axios';
-const baseURL = 'http://192.168.1.5:3000/login';
+import AsyncStorage from '@react-native-community/async-storage'
+const baseURL = 'https://stormy-reef-75266.herokuapp.com/login';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -33,7 +34,7 @@ const Login = ({ navigation }) => {
 
   const { email, password } = credentials;
 
-  const onLoginPress = () => {
+  const onLoginPress =  () => {
     if (!email) {
       alert('Email is required');
     } else if (!password) {
@@ -43,9 +44,10 @@ const Login = ({ navigation }) => {
       //   type: LOADING_START,
       // });
       loginRequest (email,password)
-      .then((res) => {
-        console.log(res, "<<<<<<<<<<<<<<<< access token login ");
-        alert(res)
+      .then( async ({data}) => {
+        console.log(data.id, "<<<<<<<<<<<<<<<< access token login ");
+        await AsyncStorage.setItem('id', JSON.stringify(data.id))
+        alert(data.id)
         // dispatchLoaderAction({
         //   type: LOADING_STOP,
         // });

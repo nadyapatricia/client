@@ -28,11 +28,16 @@ const Dashboard = ({ navigation }) => {
         axios({
           method: 'get',
           // url: "http://192.168.1.5:3000/users"
-          url: "https://jsonplaceholder.typicode.com/users"
+          url: "https://stormy-reef-75266.herokuapp.com/users"
         })
         .then(({data}) => {
-          console.log(data);
-          setUser(data)
+          let advisoryTemp = []
+          data.forEach(element => {
+            if(element.role === 'adviseryBoard'){
+              advisoryTemp.push(element)
+            }
+          })
+          setUser(advisoryTemp)
         })
         .catch(err => {
           console.log(err);
@@ -71,10 +76,13 @@ const Dashboard = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const handlePress = (UserId) => {
-    console.log("<<<<<<<< handlePRESS");
+  const handlePress = async ({item}) => {
+    console.log(AdvisorId, "<<<<<<<< handlePRESS");
+    let { id , name } = item
+    await AsyncStorage.setItem('AdvisorId', JSON.stringify(id))
+    await AsyncStorage.setItem('user', JSON.stringify(name))
     navigation.navigate('Chat', {
-      UserId,
+      AdvisorId,
     });
   };
 
@@ -96,13 +104,13 @@ const Dashboard = ({ navigation }) => {
           <FlatList
             data={users}
             renderItem={({item}) => (
-              <TouchableOpacity style={styles.card} onPress={handlePress}>
+              <TouchableOpacity style={styles.card} onPress={() => {handlePress(item)}}>
               <CardUser
                 image_url='https://minotar.net/armor/bust/user/100.png'
                 name={item.name}
-                // str_number={item.str_number}
-                // address={item.work_address}
-                onPress={() => handlePress(item.id)}/>
+                str_number={item.str_number}
+                address={item.work_address}
+                />
               </TouchableOpacity>
             )}
             keyExtractor={item => item.id}

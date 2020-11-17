@@ -26,17 +26,24 @@ if (firebase.apps.length === 0) { //
 
 YellowBox.ignoreWarnings(['Setting a timer for a long period of time'])
 
-const db = firebase.firestore()
-const chatsRef = db.collection('testing')
 
-const Chat = () => {
+
+// 123-456 ini dapet dari userID nya si yang login, dan si userID nya si prof / advisor
+const Chat = (AdvisorId) => {
     const [user, setUser] = useState(null)
     const [name, setName] = useState('')
     const [messages, setMessages] = useState([]) // nyimpen semua chat yang ditulis
-
+    
+    const db = firebase.firestore()
+    // akan ngambil data id user yang login dan advisor
+    // yang login dari asyncstorage , yang advisor dari AdvisorId
+    const chatsRef = db.collection('rooms').doc(`${DoctorId}_${AdvisorId}`).collection('messages')
+    
     useEffect(() => {
+        getDoctorId()
         readUser()
         const unsubscribe = chatsRef.onSnapshot((querySnapshot) => { // jadi nggak nge listen terus terusan , onSnapShot => kepanggil tiap ada update di collection kita
+            // console.log(querySnapshot, "<<<<<<<< querysnapshot");
             const messagesFirestore = querySnapshot // nanti isinya ini adalah database yang keganti
                 .docChanges() // cuma ngambil data yang baru doang
                 .filter(({ type }) => type === 'added') // nambahin data yang baru
@@ -74,6 +81,21 @@ const Chat = () => {
     async function handleSend(messages) {
         const writes = messages.map((m) => chatsRef.add(m)) // nambahin chat yang baru ke dalam database
         await Promise.all(writes)
+    }
+
+    let DoctorId
+    const getDoctorId = async () => {
+        try {
+            const value = await AsyncStorage.getItem('id');
+            if (value !== null) {
+            // We have data!!
+            DoctorId = value
+            console.log(value), "<<<<<<<doctor ID";
+            }
+        } catch (error) {
+            // Error retrieving data
+            console.log(error);
+        }
     }
 
     if (!user) {
