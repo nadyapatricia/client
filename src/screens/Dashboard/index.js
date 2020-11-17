@@ -16,14 +16,40 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import CardUser from '../../components/cardUser';
 import SearchBar from '../../components/searchBar';
 import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage'
+import * as firebase from 'firebase'
+import 'firebase/firestore'
+
+
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
 const Dashboard = ({ navigation }) => {
 
+  const fetchRoom = async () => {
+    try{
+      const db = firebase.firestore()
+      const chatsRef = db.collection('rooms')
+      let data = await chatsRef.get()
+      data.docs.forEach(datum => {
+        console.log(datum.id, "<<<<<<<<<<<<", datum.data());
+      })
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+  // async getMarker() {
+  //   const snapshot = await firebase.firestore().collection('events').get()
+  //   return snapshot.docs.map(doc => doc.data());
+  // }
+  
   const [users, setUser] = useState([])
     useEffect (() => {
+      fetchRoom()
+    
       const fetchUsers = async () => {
         axios({
           method: 'get',
@@ -76,13 +102,14 @@ const Dashboard = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const handlePress = async ({item}) => {
-    console.log(AdvisorId, "<<<<<<<< handlePRESS");
-    let { id , name } = item
-    await AsyncStorage.setItem('AdvisorId', JSON.stringify(id))
-    await AsyncStorage.setItem('user', JSON.stringify(name))
+
+
+  const handlePress = async (AdvisorId) => {
+    console.log(AdvisorId, "<<<<<<<< handlePRESS")
+    const UserId = await AsyncStorage.getItem('id');
     navigation.navigate('Chat', {
       AdvisorId,
+      UserId
     });
   };
 
@@ -104,7 +131,7 @@ const Dashboard = ({ navigation }) => {
           <FlatList
             data={users}
             renderItem={({item}) => (
-              <TouchableOpacity style={styles.card} onPress={() => {handlePress(item)}}>
+              <TouchableOpacity style={styles.card} onPress={() => {handlePress(item.id)}}>
               <CardUser
                 image_url='https://minotar.net/armor/bust/user/100.png'
                 name={item.name}

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Login, Dashboard , Chat} from './src/screens';
+import { Login, Dashboard , Chat, Room} from './src/screens';
 import { color } from './src/utility';
 import { Loader } from './src/components';
 
@@ -52,6 +52,10 @@ function App() {
             <Stack.Screen
               name='Chat'
               component={Chat}
+            />
+            <Stack.Screen
+              name='Room'
+              component={Room}
             />
           </Stack.Navigator>
         </NavigationContainer>
