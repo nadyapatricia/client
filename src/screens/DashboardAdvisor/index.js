@@ -54,7 +54,7 @@ const DashboardAdvisor = ({ navigation }) => {
         axios({
           method: 'get',
           // url: "http://192.168.1.5:3000/users"
-          url: "https://stormy-reef-75266.herokuapp.com/users"
+          url: "https://obscure-harbor-99680.herokuapp.com/users"
         })
         .then(({data}) => {
           let userTemp = []

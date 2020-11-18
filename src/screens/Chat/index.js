@@ -39,10 +39,10 @@ const Chat = (ID) => {
     
     const roomId = () => {
         const {UserLoginId, UserDashboardId} = ID.route.params
-        if(UserLoginId > UserDashboardId){
+        if (UserLoginId > UserDashboardId){
             return `${UserDashboardId}_${UserLoginId}`
         } else {
-            return `${UserLoginId}_${UserDashboardId}` 
+            return `${UserLoginId}_${UserDashboardId}`
         }
     }
 
@@ -62,7 +62,11 @@ const Chat = (ID) => {
                     const message = doc.data() // individual message, method nya bakal ngasih kita data message nya
                     //createdAt is firebase.firestore.Timestamp instance
                     //https://firebase.google.com/docs/reference/js/firebase.firestore.Timestamp
-                    return { ...message, createdAt: message.createdAt.toDate() }
+                    if (message) {
+                        return { ...message, createdAt: message.createdAt.toDate() }
+                    } else {
+                        return message
+                    }
                 })
                 .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) // ini yang nampilin urutan chat sesuai urutan bener
             appendMessages(messagesFirestore) // tanpa ini, chatnya bakal ke replace, bukan kenambahin chat bar nya

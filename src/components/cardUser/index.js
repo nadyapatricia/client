@@ -8,26 +8,25 @@ export default function CardUser({
   str_number,
   image_url,
   address,
-  handlePress,
+  speciality,
 }) {
 
   return (
     <>
-      {/* <TouchableOpacity style={styles.card} onPress={handlePress}> */}
-        <View style={{ flexDirection: 'row' }}>
-          <View style={styles.cardImage}>
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={{ uri: image_url }}
-            />
-          </View>
-          <View style={{ flex: 0.7, overflow: 'hidden', left: -10 }}>
-            <Text style={styles.cardTitle}>{name}</Text>
-            <Text style={styles.cardNumber}>{str_number}</Text>
-            <Text style={styles.cardAddress}>{address}</Text>
-          </View>
+      <View style={{ flexDirection: 'row' }}>
+        <View style={styles.cardImage}>
+          <Image
+            style={{ width: 65, height: 65, borderRadius: 50 }}
+            source={{ uri: image_url }}
+          />
         </View>
-      {/* </TouchableOpacity> */}
+        <View style={{ flex: 0.7, overflow: 'hidden', left: -10, top: 2 }}>
+          <Text style={styles.cardTitle}>{name}</Text>
+          <Text style={styles.cardNumber}>{str_number}</Text>
+          <Text style={styles.cardSpecialty}>{speciality}</Text>
+          <Text style={styles.cardAddress}>{address}</Text>
+        </View>
+      </View>
     </>
   );
 }

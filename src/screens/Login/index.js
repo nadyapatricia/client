@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 // import {loginRequest} from '../../network'
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage'
-const baseURL = 'https://stormy-reef-75266.herokuapp.com/login';
+const baseURL = 'https://obscure-harbor-99680.herokuapp.com/login';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -48,7 +48,7 @@ const Login = ({ navigation }) => {
         console.log(data.id, "<<<<<<<<<<<<<<<< access token login ");
         await AsyncStorage.setItem('id', JSON.stringify(data.id))
         alert(data.id)
-        if ( data.id != 2 ){
+        if ( data.role != 'doctor' ){
           navigation.navigate('DashboardAdvisor')
         } else {
           navigation.navigate('Dashboard');

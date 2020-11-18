@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 1.5,
+    elevation: 5
   },
   cardTitle: {
     fontWeight: 'bold',
@@ -38,6 +39,12 @@ export const styles = StyleSheet.create({
   cardImage: {
     padding: 0,
     flex: 0.3,
-    top: 7,
+    top: 11,
+    left: 3,
+  },
+  cardSpecialty: {
+    fontSize: 12,
+    marginLeft: 10,
+    fontStyle: 'italic',
   },
 });
