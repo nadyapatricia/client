@@ -10,10 +10,9 @@ export default function CardUser({
   address,
   speciality,
 }) {
-
   return (
     <>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', width: '90%' }}>
         <View style={styles.cardImage}>
           <Image
             style={{ width: 65, height: 65, borderRadius: 50 }}

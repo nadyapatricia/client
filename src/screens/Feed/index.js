@@ -1,147 +1,225 @@
-
-// const Feed = () => {
-
-// }
-
-export default Feed
-
-import React, { useLayoutEffect, Fragment, useEffect, useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
-  SafeAreaView,
   Text,
-  StyleSheet,
-  FlatList,
   View,
+  FlatList,
+  Modal,
+  StyleSheet,
   Alert,
-  Image,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity
+  TextInput,
 } from 'react-native';
-import { globalStyle, color, appStyle } from '../../utility';
+import { globalStyle } from '../../utility';
+import CardPost from '../../components/cardPost';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import CardUser from '../../components/cardUser';
-import SearchBar from '../../components/searchBar';
-import axios from 'axios'
+import { Formik } from 'formik';
+import { CustomButton } from '../../components';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
+let loggedUser;
 
-const Dashboard = ({ navigation }) => {
+export default function Feed() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [allData, setAllData] = useState([]);
+  const [token, setToken] = useState('');
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-          headerRight: () => (
-            <SimpleLineIcons
-              name='logout'
-              size={26}
-              color={color.WHITE}
-              style={{ right: 10 }}
-              onPress={() =>
-                Alert.alert(
-                  'Logout',
-                  'Are you sure to log out?',
-                  [
-                    {
-                      text: 'Yes',
-                      onPress: () => logout(),
-                    },
-                    {
-                      text: 'No',
-                    },
-                  ],
-                  { cancelable: false }
-                )
-              }
-            />
-          ),
-          headerLeft: () => (
-            <SimpleLineIcons
-              name='grid'
-              size={26}
-              color={color.WHITE}
-              style={{ left: 10 }}
-              onPress={() => navigation.navigate('Feed')}
-            />
-          ),
-        });
-      }, [navigation]);
+  // const getCurrentLoggedInUserId = async () => {
+  //   const UserId = await AsyncStorage.getItem('access_token');
+  //   alert(`ini current logged in user ${UserId}`);
+  //   loggedUser = UserId;
+  // };
 
-  const [users, setUser] = useState([])
-    useEffect (() => {
-      const fetchUsers = async () => {
-        axios({
-          method: 'get',
-          // url: "http://192.168.1.5:3000/users"
-          url: "https://jsonplaceholder.typicode.com/users"
-        })
-        .then(({data}) => {
+  useLayoutEffect(() => {
+    (async () => {
+      const UserId = await AsyncStorage.getItem('access_token');
+      console.log(UserId);
+      setToken(UserId);
+    })();
+
+    console.log(loggedUser, '<<<<<<<<<< sebelum axios');
+    const fetchPosts = async () => {
+      axios({
+        method: 'GET',
+        url: 'https://obscure-harbor-99680.herokuapp.com/posts',
+        headers: {
+          access_token: token,
+        },
+      })
+        .then(({ data }) => {
           console.log(data);
-          setUser(data)
+          setAllData(data);
         })
-        .catch(err => {
-          console.log(err);
-        })
-      }
-      console.log(users, "<<<<<<<<<<< users");
-      fetchUsers()
-    }, [])
-
-  const handlePress = (UserId) => {
-    console.log("<<<<<<<< handlePRESS");
-    navigation.navigate('Chat', {
-      UserId,
-    });
-  };
+        .catch((err) => {
+          alert(err);
+        });
+    };
+    fetchPosts();
+    console.log(loggedUser, '<<<<<<<<<< setelah axios');
+  }, [token, allData, setAllData, setToken]);
 
   return (
-    <Fragment>
-      {/* <Text>{JSON.stringify(users, null, 2)}</Text> */}
-      <View style={([globalStyle.flex1], { margin: 20 })}>
-        <Text
-          style={{
-            fontFamily: 'comfortaa-bold',
-            fontSize: 25,
-            marginBottom: 20,
-          }}
+    <>
+      <View style={([globalStyle.flex1], { margin: 20, marginLeft: 30 })}>
+        <Modal
+          visible={modalOpen}
+          animationType='slide'
+          style={styles.modalToggle}
         >
-          Search
-        </Text>
-        <SearchBar />
-        <SafeAreaView>
+          <View style={{ marginTop: 20, height: '70%', borderRadius: 20 }}>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+            >
+              <View>
+                <Text style={{ fontFamily: 'comfortaa-bold', fontSize: 25 }}>
+                  Create Post
+                </Text>
+              </View>
+              <View>
+                <SimpleLineIcons
+                  name='close'
+                  size={24}
+                  color='black'
+                  style={{ marginTop: 8 }}
+                  onPress={() =>
+                    Alert.alert(
+                      'Cancel create post',
+                      `You won't be able to revert this`,
+                      [
+                        {
+                          text: 'OK',
+                          onPress: () => setModalOpen(false),
+                        },
+                        {
+                          text: 'Cancel',
+                        },
+                      ],
+                      { cancelable: false }
+                    )
+                  }
+                />
+              </View>
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Formik
+                initialValues={{
+                  title: '',
+                  thumbnail_url: '',
+                  caption: '',
+                }}
+                onSubmit={(values) => {
+                  const { title, thumbnail_url, caption } = values;
+                  console.log(title, thumbnail_url, caption);
+                  axios({
+                    url: 'https://obscure-harbor-99680.herokuapp.com/posts',
+                    method: 'POST',
+                    headers: {
+                      access_token: token,
+                    },
+                    data: {
+                      title,
+                      thumbnail_url,
+                      caption,
+                    },
+                  })
+                    .then(() => {
+                      setModalOpen(false);
+                    })
+                    .catch((err) => {
+                      alert(err);
+                      console.log(err);
+                    });
+                }}
+              >
+                {(props) => (
+                  <View style={{ marginHorizontal: 30, marginVertical: 7 }}>
+                    <TextInput
+                      style={styles.input}
+                      placeholder='Enter title'
+                      onChangeText={props.handleChange('title')}
+                      value={props.values.title}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder='Enter thumbnail URL'
+                      onChangeText={props.handleChange('thumbnail_url')}
+                      value={props.values.thumbnail_url}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder='Enter caption'
+                      onChangeText={props.handleChange('caption')}
+                      value={props.values.caption}
+                      multiline
+                    />
+                    <CustomButton
+                      title='Post'
+                      onPress={props.handleSubmit}
+                      btnStyle={{ width: '100%' }}
+                    />
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </View>
+        </Modal>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View>
+            <Text
+              style={{
+                fontFamily: 'comfortaa-bold',
+                fontSize: 25,
+                marginBottom: 20,
+              }}
+            >
+              Feed
+            </Text>
+          </View>
+          <View>
+            <SimpleLineIcons
+              name='plus'
+              size={26}
+              color='black'
+              style={{ marginTop: 8 }}
+              onPress={() => setModalOpen(true)}
+            />
+          </View>
+        </View>
+        <View>
           <FlatList
-            data={users}
-            renderItem={({item}) => (
-              <TouchableOpacity style={styles.card} onPress={handlePress}>
-              <CardUser
-                image_url='https://minotar.net/armor/bust/user/100.png'
-                name={item.name}
-                // str_number={item.str_number}
-                // address={item.work_address}
-                onPress={() => handlePress(item.id)}/>
-              </TouchableOpacity>
+            style={{ marginBottom: 140 }}
+            data={allData}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <CardPost
+                avatar_url={item.User.avatar_url}
+                username={item.User.username}
+                thumbnail_url={item.thumbnail_url}
+                caption={item.caption}
+                title={item.title}
+              />
             )}
-            keyExtractor={item => item.id}
           ></FlatList>
-        </SafeAreaView>
+        </View>
       </View>
-    </Fragment>
+    </>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
+  modalToggle: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#f2f2f2',
+    padding: 10,
+    borderRadius: 30,
+    alignSelf: 'center',
   },
-  tinyLogo: {
-    width: 60,
-    height: 60,
-    borderRadius: 50,
-  },
-  logo: {
-    width: 66,
-    height: 58,
+  input: {
+    borderWidth: 1,
+    borderColor: `#DDD`,
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 10,
+    marginVertical: 5,
   },
 });
-
-export default Dashboard;

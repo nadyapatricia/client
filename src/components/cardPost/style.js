@@ -1,7 +1,7 @@
-import React from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export const styles = StyleSheet.create({
   card: {
@@ -10,8 +10,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     width: windowWidth / 1.2,
-    marginHorizontal: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 2,
@@ -19,10 +18,8 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 1.5,
-    elevation: 5,
   },
   cardTitle: {
-    fontWeight: 'bold',
     fontSize: 16,
     marginLeft: 10,
   },
@@ -37,10 +34,9 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
   cardImage: {
-    flex: 0.3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
+    padding: 0,
+    top: 11,
+    left: 3,
   },
   cardSpecialty: {
     fontSize: 12,

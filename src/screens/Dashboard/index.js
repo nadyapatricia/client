@@ -7,44 +7,45 @@ import {
   View,
   Alert,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import { globalStyle, color, appStyle } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import CardUser from '../../components/cardUser';
 import SearchBar from '../../components/searchBar';
-import axios from 'axios'
-import AsyncStorage from '@react-native-community/async-storage'
-import * as firebase from 'firebase'
-import 'firebase/firestore'
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 const Dashboard = ({ navigation }) => {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('');
   const [userFiltered, setUserFiltered] = useState([]);
-  const [users, setUser] = useState([])
+  const [users, setUser] = useState([]);
 
-    useEffect (() => {    
-      const fetchUsers = async () => {
-        axios({
-          method: 'get',
-          url: "https://obscure-harbor-99680.herokuapp.com/users"
-        })
-        .then(({data}) => {
-          let advisoryTemp = []
-          data.forEach(element => {
-            if(element.role === 'adviseryBoard'){
-              advisoryTemp.push(element)
+  useEffect(() => {
+    const fetchUsers = async () => {
+      axios({
+        method: 'get',
+        url: 'https://obscure-harbor-99680.herokuapp.com/users',
+      })
+        .then(({ data }) => {
+          let advisoryTemp = [];
+          data.forEach((element) => {
+            if (element.role === 'adviseryBoard') {
+              advisoryTemp.push(element);
             }
-          })
-          setUser(advisoryTemp)
-          setUserFiltered(advisoryTemp)
+          });
+          setUser(advisoryTemp);
+          setUserFiltered(advisoryTemp);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
-        })
-      }
-      fetchUsers()
-    }, [])
+        });
+    };
+    fetchUsers();
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,7 +53,7 @@ const Dashboard = ({ navigation }) => {
         <SimpleLineIcons
           name='logout'
           size={26}
-          color="white"
+          color='white'
           style={{ right: 10 }}
           onPress={() =>
             Alert.alert(
@@ -73,24 +74,33 @@ const Dashboard = ({ navigation }) => {
         />
       ),
       headerLeft: () => (
+        // (async () => {
+        //   const UserId = await AsyncStorage.getItem('access_token');
+        //   alert(`ini current logged in user ${UserId}`);
+        //   setToken(UserId);
+        // })();
         <SimpleLineIcons
           name='grid'
           size={26}
           color='white'
           style={{ left: 10 }}
-          onPress={() => navigation.navigate('Feed')}
+          onPress={() => navigation.navigate('Feed', {})}
         />
       ),
     });
   }, [navigation]);
 
   const handlePress = async (UserDashboardId) => {
-    console.log(UserDashboardId, "<<<<<<<< handlePRESS")
+    console.log(UserDashboardId, '<<<<<<<< handlePRESS');
     const UserLoginId = await AsyncStorage.getItem('id');
     navigation.navigate('Chat', {
       UserDashboardId,
-      UserLoginId
+      UserLoginId,
     });
+  };
+
+  const logout = () => {
+    navigation.navigate('Login');
   };
 
   function renderHeader() {
@@ -109,16 +119,12 @@ const Dashboard = ({ navigation }) => {
           autoCapitalize='none'
           autoCorrect={false}
           clearButtonMode='always'
-          // onEndEditing={(queryText) => handleSearch(queryText)}
           onChangeText={(query) => handleSearch(query)}
-          // onChangeText={(queryText) => setTimeout(() => {
-          //   handleSearch(queryText)
-          //   }, 3000)}
           placeholder='Search for name or specialty'
           style={{
             backgroundColor: '#fff',
             paddingHorizontal: 20,
-            width: "90%"
+            width: '90%',
           }}
         />
       </View>
@@ -127,9 +133,13 @@ const Dashboard = ({ navigation }) => {
 
   const handleSearch = (text) => {
     setUserFiltered(
-      users.filter((i) => i.name.toLowerCase().includes(text.toLowerCase()))
-    )
-  }
+      users.filter(
+        (i) =>
+          i.name.toLowerCase().includes(text.toLowerCase()) ||
+          i.speciality.toLowerCase().includes(text.toLowerCase())
+      )
+    );
+  };
 
   return (
     <Fragment>
@@ -148,16 +158,21 @@ const Dashboard = ({ navigation }) => {
           <FlatList
             style={{ marginBottom: 140 }}
             data={userFiltered}
-            keyExtractor={item => item.id}
-            renderItem={({item}) => (
-              <TouchableOpacity style={styles.card} onPress={() => {handlePress(item.id)}}>
-              <CardUser
-                image_url={item.avatar_url}
-                name={item.name}
-                str_number={item.str_number}
-                address={item.work_address}
-                speciality={item.speciality}
-              />
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => {
+                  handlePress(item.id);
+                }}
+              >
+                <CardUser
+                  image_url={item.avatar_url}
+                  name={item.name}
+                  str_number={item.str_number}
+                  address={item.work_address}
+                  speciality={item.speciality}
+                />
               </TouchableOpacity>
             )}
           ></FlatList>
@@ -166,7 +181,6 @@ const Dashboard = ({ navigation }) => {
     </Fragment>
   );
 };
-
 
 export default Dashboard;
 
@@ -188,6 +202,6 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 1.5,
-    elevation: 5
-  }
+    elevation: 5,
+  },
 });

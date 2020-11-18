@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Text, View, Image, Dimensions } from 'react-native';
+import { Text, View, Image, Dimensions, Keyboard } from 'react-native';
 import { globalStyle, color, appStyle } from '../../utility';
 import { InputField, Logo, CustomButton } from '../../components';
 import { Store } from '../../context/store';
@@ -7,11 +7,10 @@ import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
 import { LinearGradient } from 'expo-linear-gradient';
 // import {loginRequest} from '../../network'
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-community/async-storage';
 const baseURL = 'https://obscure-harbor-99680.herokuapp.com/login';
 
 const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
 
 const Login = ({ navigation }) => {
   const globalState = useContext(Store);
@@ -34,35 +33,39 @@ const Login = ({ navigation }) => {
 
   const { email, password } = credentials;
 
-  const onLoginPress =  () => {
+  const onLoginPress = () => {
     if (!email) {
       alert('Email is required');
     } else if (!password) {
       alert('Password is required');
     } else {
-      // dispatchLoaderAction({
-      //   type: LOADING_START,
-      // });
-      loginRequest (email,password)
-      .then( async ({data}) => {
-        console.log(data.id, "<<<<<<<<<<<<<<<< access token login ");
-        await AsyncStorage.setItem('id', JSON.stringify(data.id))
-        alert(data.id)
-        if ( data.role != 'doctor' ){
-          navigation.navigate('DashboardAdvisor')
-        } else {
-          navigation.navigate('Dashboard');
-        }
-        // dispatchLoaderAction({
-        //   type: LOADING_STOP,
-        // });
-      })
-      .catch(err => {
-        alert(err)
-      })
-      // setTimeout(() => {
-      // }, 1500);
+      dispatchLoaderAction({
+        type: LOADING_START,
+      });
+      loginRequest(email, password)
+        .then(async ({ data }) => {
+          // console.log(data.id, '<<<<<<<<<<<<<<<< access token login ');
+          console.log(
+            data.access_token,
+            '<<<<<<<<<<<<<<<< access token login '
+          );
+          await AsyncStorage.setItem('id', JSON.stringify(data.id));
+          await AsyncStorage.setItem('access_token', data.access_token);
+
+          if (data.role != 'doctor') {
+            navigation.navigate('DashboardAdvisor');
+          } else {
+            navigation.navigate('Dashboard');
+          }
+          dispatchLoaderAction({
+            type: LOADING_STOP,
+          });
+        })
+        .catch((err) => {
+          alert(err);
+        });
     }
+    Keyboard.dismiss();
   };
 
   const handleOnChange = (name, value) => {
@@ -93,12 +96,12 @@ const Login = ({ navigation }) => {
         />
         <Text
           style={{
-            fontFamily: 'comfortaa-regular',
+            fontFamily: 'comfortaa-bold',
             fontSize: 20,
             textAlign: 'center',
           }}
         >
-          Advisory Board
+          MedRx
         </Text>
       </View>
       <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>
