@@ -30,7 +30,7 @@ YellowBox.ignoreWarnings(['Setting a timer for a long period of time'])
 
 // 123-456 ini dapet dari userID nya si yang login, dan si userID nya si prof / advisor
 const Chat = (ID) => {
-    console.log(ID.route.params, "<<<<<<<ADVISOR ID")
+    console.log(ID.route.params, "<<<<<<<PARAMS")
     const [user, setUser] = useState(null)
     const [name, setName] = useState('')
     const [messages, setMessages] = useState([]) // nyimpen semua chat yang ditulis
@@ -38,13 +38,16 @@ const Chat = (ID) => {
     // yang login dari asyncstorage , yang advisor dari AdvisorId
     
     const roomId = () => {
-        const {UserId, AdvisorId} = ID.route.params
-        if(UserId > AdvisorId){
-            return `${UserId}_${AdvisorId}` 
+        const {UserLoginId, UserDashboardId} = ID.route.params
+        if(UserLoginId > UserDashboardId){
+            return `${UserDashboardId}_${UserLoginId}`
         } else {
-            return `${AdvisorId}_${UserId}`
+            return `${UserLoginId}_${UserDashboardId}` 
         }
     }
+
+    // "UserDashboardId": 2,
+    // "UserLoginId": "3",
     const db = firebase.firestore()
     const chatsRef = db.collection('rooms').doc(roomId()).collection('messages')
     

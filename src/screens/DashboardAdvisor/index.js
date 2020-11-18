@@ -25,7 +25,7 @@ import 'firebase/firestore'
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
-const Dashboard = ({ navigation }) => {
+const DashboardAdvisor = ({ navigation }) => {
 
   const fetchRoom = async () => {
     try{
@@ -57,13 +57,13 @@ const Dashboard = ({ navigation }) => {
           url: "https://stormy-reef-75266.herokuapp.com/users"
         })
         .then(({data}) => {
-          let advisoryTemp = []
+          let userTemp = []
           data.forEach(element => {
-            if(element.role === 'adviseryBoard'){
-              advisoryTemp.push(element)
+            if(element.role !== 'adviseryBoard'){
+              userTemp.push(element)
             }
           })
-          setUser(advisoryTemp)
+          setUser(userTemp)
         })
         .catch(err => {
           console.log(err);
@@ -103,15 +103,6 @@ const Dashboard = ({ navigation }) => {
   }, [navigation]);
 
 
-
-  // const handlePress = async (AdvisorId) => {
-  //   console.log(AdvisorId, "<<<<<<<< handlePRESS")
-  //   const UserId = await AsyncStorage.getItem('id');
-  //   navigation.navigate('Chat', {
-  //     AdvisorId,
-  //     UserId
-  //   });
-  // };
 
   const handlePress = async (UserDashboardId) => {
     console.log(UserDashboardId, "<<<<<<<< handlePRESS")
@@ -172,4 +163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dashboard;
+export default DashboardAdvisor;

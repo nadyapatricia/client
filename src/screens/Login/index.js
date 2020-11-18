@@ -48,10 +48,14 @@ const Login = ({ navigation }) => {
         console.log(data.id, "<<<<<<<<<<<<<<<< access token login ");
         await AsyncStorage.setItem('id', JSON.stringify(data.id))
         alert(data.id)
+        if ( data.id != 2 ){
+          navigation.navigate('DashboardAdvisor')
+        } else {
+          navigation.navigate('Dashboard');
+        }
         // dispatchLoaderAction({
         //   type: LOADING_STOP,
         // });
-        navigation.navigate('Dashboard');
       })
       .catch(err => {
         alert(err)
