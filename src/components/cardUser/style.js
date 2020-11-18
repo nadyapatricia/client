@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 1.5,
+    elevation: 5,
   },
   cardTitle: {
     fontWeight: 'bold',

@@ -1,105 +1,204 @@
-import React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  Text,
+  View,
+  FlatList,
+  Modal,
+  StyleSheet,
+  Alert,
+  TextInput,
+} from 'react-native';
 import { globalStyle } from '../../utility';
 import CardPost from '../../components/cardPost';
-
-const dummyData = [
-  {
-    id: 2,
-    title: 'Testing Article',
-    thumbnail_url: 'https://picsum.photos/200.jpg',
-    caption: 'Lorem ipsum dolor sit amet bla bla bla',
-    UserId: 2,
-    createdAt: '2020-11-16T16:50:55.286Z',
-    updatedAt: '2020-11-16T16:50:55.286Z',
-    User: {
-      id: 2,
-      name: 'Ardira Fariz Pasha',
-      username: 'dirabbieto',
-      email: 'dira@mail.com',
-      avatar_url: 'https://randomuser.me/api/portraits/men/71.jpg',
-      str_number: '33.1.1.401.3.18.103800',
-      work_address: 'RS Mitra Keluarga',
-      password: '$2a$10$sr7Yz8QxhksRZgNHNkjKwO9capqTeM36aWy9TCMM.F3Bqu2WtSJ86',
-      role: 'doctor',
-      createdAt: '2020-11-16T16:50:54.999Z',
-      updatedAt: '2020-11-16T16:50:54.999Z',
-    },
-  },
-  {
-    id: 3,
-    title: 'Testing Article',
-    thumbnail_url: 'https://picsum.photos/200.jpg',
-    caption: 'Lorem ipsum dolor sit amet bla bla bla',
-    UserId: 4,
-    createdAt: '2020-11-16T16:50:55.286Z',
-    updatedAt: '2020-11-16T16:50:55.286Z',
-    User: {
-      id: 4,
-      name: 'Ridwan Wiriandi',
-      username: 'iwa',
-      email: 'Ridwan@mail.com',
-      avatar_url: 'https://randomuser.me/api/portraits/men/80.jpg',
-      str_number: '33.1.1.405.3.18.103800',
-      work_address: 'RS Mitra Keluarga',
-      password: '$2a$10$sr7Yz8QxhksRZgNHNkjKwO9capqTeM36aWy9TCMM.F3Bqu2WtSJ86',
-      role: 'adviseryBoard',
-      createdAt: '2020-11-16T16:50:55.268Z',
-      updatedAt: '2020-11-16T16:50:55.268Z',
-    },
-  },
-  {
-    id: 4,
-    title: 'Testing Article',
-    thumbnail_url: 'https://picsum.photos/200.jpg',
-    caption: 'Lorem ipsum dolor sit amet bla bla bla',
-    UserId: 3,
-    createdAt: '2020-11-16T16:50:55.286Z',
-    updatedAt: '2020-11-16T16:50:55.286Z',
-    User: {
-      id: 3,
-      name: 'Nadya Patricia',
-      username: 'chameleonsoul',
-      email: 'nadya@mail.com',
-      avatar_url: 'https://randomuser.me/api/portraits/women/72.jpg',
-      str_number: '33.1.1.405.3.18.103800',
-      work_address: 'RS Mitra Keluarga',
-      password: '$2a$10$sr7Yz8QxhksRZgNHNkjKwO9capqTeM36aWy9TCMM.F3Bqu2WtSJ86',
-      role: 'adviseryBoard',
-      createdAt: '2020-11-16T16:50:55.126Z',
-      updatedAt: '2020-11-16T16:50:55.126Z',
-    },
-  },
-];
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { Formik } from 'formik';
+import { CustomButton } from '../../components';
+import axios from 'axios';
 
 export default function Feed() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [allData, setAllData] = useState([]);
+
+  useEffect(() => {
+    axios({
+      url: 'https://stormy-reef-75266.herokuapp.com/posts',
+      headers: {
+        access_token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpcmFAbWFpbC5jb20iLCJpZCI6MiwiaWF0IjoxNjA1NjM3NzQxfQ.NynGX6tc_R_Sn8RSSznidMUVKofKvnCKkTiYP-JjRok',
+      },
+    })
+      .then(({ data }) => {
+        setAllData(data);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  });
+
   return (
     <>
       <View style={([globalStyle.flex1], { margin: 20, marginLeft: 30 })}>
-        <Text
-          style={{
-            fontFamily: 'comfortaa-bold',
-            fontSize: 25,
-            marginBottom: 20,
-          }}
+        <Modal
+          visible={modalOpen}
+          animationType='slide'
+          style={styles.modalToggle}
         >
-          Feed
-        </Text>
-        <FlatList
-          data={dummyData}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <CardPost
-              avatar_url={item.User.avatar_url}
-              title={item.title}
-              caption={item.caption}
-              username={item.User.username}
-              thumbnail_url={item.thumbnail_url}
-              onPress={() => handlePress(item.id)}
+          <View style={{ marginTop: 20, height: '70%', borderRadius: 20 }}>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-around' }}
+            >
+              <View>
+                <Text style={{ fontFamily: 'comfortaa-bold', fontSize: 25 }}>
+                  Create Post
+                </Text>
+              </View>
+              <View>
+                <SimpleLineIcons
+                  name='close'
+                  size={24}
+                  color='black'
+                  style={{ marginTop: 8 }}
+                  onPress={() =>
+                    Alert.alert(
+                      'Cancel create post',
+                      `You won't be able to revert this`,
+                      [
+                        {
+                          text: 'OK',
+                          onPress: () => setModalOpen(false),
+                        },
+                        {
+                          text: 'Cancel',
+                        },
+                      ],
+                      { cancelable: false }
+                    )
+                  }
+                />
+              </View>
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Formik
+                initialValues={{
+                  title: '',
+                  thumbnail_url: '',
+                  caption: '',
+                }}
+                onSubmit={(values) => {
+                  const { title, thumbnail_url, caption } = values;
+                  console.log(title, thumbnail_url, caption);
+                  axios({
+                    url: 'https://stormy-reef-75266.herokuapp.com/posts',
+                    method: 'POST',
+                    headers: {
+                      access_token:
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpcmFAbWFpbC5jb20iLCJpZCI6MiwiaWF0IjoxNjA1NjM3NzQxfQ.NynGX6tc_R_Sn8RSSznidMUVKofKvnCKkTiYP-JjRok',
+                    },
+                    data: {
+                      title,
+                      thumbnail_url,
+                      caption,
+                    },
+                  })
+                    .then(() => {
+                      setModalOpen(false);
+                    })
+                    .catch((err) => {
+                      alert(err);
+                      console.log(err);
+                    });
+                }}
+              >
+                {(props) => (
+                  <View style={{ marginHorizontal: 30, marginVertical: 7 }}>
+                    <TextInput
+                      style={styles.input}
+                      placeholder='Enter title'
+                      onChangeText={props.handleChange('title')}
+                      value={props.values.title}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder='Enter thumbnail URL'
+                      onChangeText={props.handleChange('thumbnail_url')}
+                      value={props.values.thumbnail_url}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder='Enter caption'
+                      onChangeText={props.handleChange('caption')}
+                      value={props.values.caption}
+                      multiline
+                    />
+                    <CustomButton
+                      title='Post'
+                      onPress={props.handleSubmit}
+                      btnStyle={{ width: '100%' }}
+                    />
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </View>
+        </Modal>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View>
+            <Text
+              style={{
+                fontFamily: 'comfortaa-bold',
+                fontSize: 25,
+                marginBottom: 20,
+              }}
+            >
+              Feed
+            </Text>
+          </View>
+          <View>
+            <SimpleLineIcons
+              name='plus'
+              size={26}
+              color='black'
+              style={{ marginTop: 8 }}
+              onPress={() => setModalOpen(true)}
             />
-          )}
-        ></FlatList>
+          </View>
+        </View>
+        <View>
+          <FlatList
+            style={{ marginBottom: 140 }}
+            data={allData}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <CardPost
+                avatar_url={item.User.avatar_url}
+                username={item.User.username}
+                thumbnail_url={item.thumbnail_url}
+                caption={item.caption}
+                title={item.title}
+              />
+            )}
+          ></FlatList>
+        </View>
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  modalToggle: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#f2f2f2',
+    padding: 10,
+    borderRadius: 30,
+    alignSelf: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: `#DDD`,
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 10,
+    marginVertical: 5,
+  },
+});

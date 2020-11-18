@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     shadowRadius: 1.5,
   },
   cardTitle: {
-    fontWeight: 'bold',
     fontSize: 16,
     marginLeft: 10,
   },
@@ -36,7 +35,6 @@ export const styles = StyleSheet.create({
   },
   cardImage: {
     padding: 0,
-    flex: 0.3,
     top: 11,
     left: 3,
   },
