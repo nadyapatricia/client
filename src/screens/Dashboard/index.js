@@ -116,7 +116,7 @@ const Dashboard = ({ navigation }) => {
                 name={item.name}
                 str_number={item.str_number}
                 address={item.work_address}
-                specialty={item.specialty}
+                specialty={item.speciality}
                 onPress={() => handlePress(item.id)}
               />
             )}
