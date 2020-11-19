@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Text, View, Image, Dimensions, Keyboard } from 'react-native';
-import { globalStyle} from '../../utility';
+import { globalStyle } from '../../utility';
 import { InputField, CustomButton } from '../../components';
 import { Store } from '../../context/store';
 import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
@@ -96,8 +96,9 @@ const Login = ({ navigation }) => {
         <Text
           style={{
             fontFamily: 'comfortaa-bold',
-            fontSize: 20,
+            fontSize: 25,
             textAlign: 'center',
+            color: 'rgb(46, 46, 46)',
           }}
         >
           MedRx
