@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { Text, View, Image, Dimensions, Keyboard } from 'react-native';
-import { globalStyle, color, appStyle } from '../../utility';
-import { InputField, Logo, CustomButton } from '../../components';
+import { globalStyle} from '../../utility';
+import { InputField, CustomButton } from '../../components';
 import { Store } from '../../context/store';
 import { LOADING_START, LOADING_STOP } from '../../context/actions/type';
 import { LinearGradient } from 'expo-linear-gradient';
-// import {loginRequest} from '../../network'
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 const baseURL = 'https://obscure-harbor-99680.herokuapp.com/login';
@@ -53,7 +52,7 @@ const Login = ({ navigation }) => {
           await AsyncStorage.setItem('access_token', data.access_token);
 
           if (data.role != 'doctor') {
-            navigation.navigate('DashboardAdvisor');
+            navigation.navigate('Advisor');
           } else {
             navigation.navigate('Dashboard');
           }
@@ -62,7 +61,7 @@ const Login = ({ navigation }) => {
           });
         })
         .catch((err) => {
-          alert(err);
+          console.log(err)
         });
     }
     Keyboard.dismiss();

@@ -55,7 +55,7 @@ function App() {
             />
             <Stack.Screen name='Dashboard' component={Dashboard} />
             <Stack.Screen
-              name='DashboardAdvisor'
+              name='Advisor'
               component={DashboardAdvisor}
             />
             <Stack.Screen name='Chat' component={Chat} />

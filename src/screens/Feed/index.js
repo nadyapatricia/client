@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -23,13 +23,7 @@ export default function Feed() {
   const [allData, setAllData] = useState([]);
   const [token, setToken] = useState('');
 
-  // const getCurrentLoggedInUserId = async () => {
-  //   const UserId = await AsyncStorage.getItem('access_token');
-  //   alert(`ini current logged in user ${UserId}`);
-  //   loggedUser = UserId;
-  // };
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     (async () => {
       const UserId = await AsyncStorage.getItem('access_token');
       console.log(UserId);
@@ -50,12 +44,12 @@ export default function Feed() {
           setAllData(data);
         })
         .catch((err) => {
-          alert(err);
+          console.log(err)
         });
     };
     fetchPosts();
     console.log(loggedUser, '<<<<<<<<<< setelah axios');
-  }, [token, allData, setAllData, setToken]);
+  }, [token]);
 
   return (
     <>
@@ -125,7 +119,6 @@ export default function Feed() {
                       setModalOpen(false);
                     })
                     .catch((err) => {
-                      alert(err);
                       console.log(err);
                     });
                 }}
@@ -186,7 +179,7 @@ export default function Feed() {
         </View>
         <View>
           <FlatList
-            style={{ marginBottom: 140 }}
+            style={{ marginBottom: 130 }}
             data={allData}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (

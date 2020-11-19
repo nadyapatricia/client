@@ -8,19 +8,15 @@ import {
   Alert,
   Dimensions,
   TouchableOpacity,
-  Keyboard,
 } from 'react-native';
-import { globalStyle, color, appStyle } from '../../utility';
+import { globalStyle } from '../../utility';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import CardUser from '../../components/cardUser';
-import SearchBar from '../../components/searchBar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import * as firebase from 'firebase';
 import 'firebase/firestore';
 
 const Dashboard = ({ navigation }) => {
-  const [query, setQuery] = useState('');
   const [userFiltered, setUserFiltered] = useState([]);
   const [users, setUser] = useState([]);
 
@@ -74,11 +70,6 @@ const Dashboard = ({ navigation }) => {
         />
       ),
       headerLeft: () => (
-        // (async () => {
-        //   const UserId = await AsyncStorage.getItem('access_token');
-        //   alert(`ini current logged in user ${UserId}`);
-        //   setToken(UserId);
-        // })();
         <SimpleLineIcons
           name='grid'
           size={26}
